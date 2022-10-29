@@ -11,11 +11,9 @@ public class Todos {
     protected List<String> list;
     protected int maxSizeList = 7;
     protected IncomingTask incomingTask;
-    protected List<List> log;
 
     public Todos() {
         this.list = new ArrayList<>();
-        this.log = new ArrayList<>();
     }
 
     public void readIncomingMsg(String jsonFile) {
@@ -28,42 +26,37 @@ public class Todos {
             } else if (incomingTask.getType().equals("RESTORE")) {
                 restoreTask();
             } else throw new IllegalArgumentException(
-            "Список пустой или в полученном файле указаны данные не предусмотренные программой");
+                    "Список пустой или в полученном файле указаны данные не предусмотренные программой");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        log.add(list);
     }
 
     public void restoreTask() {
-//        if (!list.isEmpty()) {
-//            list.remove(list.size() - 1);
-//        }
-        System.out.println(log);
-        if (!log.isEmpty()) {
-            log.remove(log.size() - 1);
-            list = log.get(log.size() - 1);
+        if (!TodoServer.getLog().isEmpty()) {
+            TodoServer.getLog().remove(TodoServer.getLog().getLast());
+            list = TodoServer.getLog().getLast();
         }
     }
 
     public void addTask(String task) {
-        if (list.isEmpty() || list.size() < maxSizeList) {
-            if (!list.contains(incomingTask.getTask())) {
-                list.add(task);
-                //log.add(incomingTask);
+        if (getList().isEmpty() || getList().size() < maxSizeList) {
+            if (!getList().contains(incomingTask.getTask())) {
+                getList().add(task);
+                TodoServer.getLog().add(new ArrayList<>(getList()));
             }
         }
     }
 
     public void removeTask(String task) {
-        if (list.contains(incomingTask.getTask())) {
-            list.remove(task);
-            //log.add(incomingTask);
+        if (getList().contains(incomingTask.getTask())) {
+            getList().remove(task);
+            TodoServer.getLog().add(new ArrayList<>(getList()));
         }
     }
 
     public String getAllTasks() {
-        List<String> listOut = new ArrayList<>(list);
+        List<String> listOut = new ArrayList<>(getList());
         Collections.sort(listOut);
         return listOut.toString()
                 .replace(",", "")

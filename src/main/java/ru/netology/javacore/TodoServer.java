@@ -3,11 +3,13 @@ package ru.netology.javacore;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.*;
 
 
 public class TodoServer {
     protected int port;
     protected Todos todos;
+    protected static ArrayDeque<List> log = new ArrayDeque<>();
 
     public TodoServer(int port, Todos todos) {
         this.port = port;
@@ -32,5 +34,9 @@ public class TodoServer {
             System.out.println("Не могу стартовать сервер!");
             e.printStackTrace();
         }
+    }
+
+    public static ArrayDeque<List> getLog() {
+        return log;
     }
 }
