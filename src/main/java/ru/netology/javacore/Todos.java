@@ -2,6 +2,7 @@ package ru.netology.javacore;
 
 import com.google.gson.Gson;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -14,6 +15,7 @@ public class Todos {
 
     public Todos() {
         this.list = new ArrayList<>();
+        this.incomingTask = new IncomingTask();
     }
 
     public void readIncomingMsg(String jsonFile) {
@@ -25,9 +27,8 @@ public class Todos {
                 removeTask(incomingTask.getTask());
             } else if (incomingTask.getType().equals("RESTORE")) {
                 restoreTask();
-            } else throw new IllegalArgumentException(
-                    "Список пустой или в полученном файле указаны данные не предусмотренные программой");
-        } catch (IOException e) {
+            }
+        } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
     }
@@ -49,7 +50,7 @@ public class Todos {
     }
 
     public void removeTask(String task) {
-        if (getList().contains(incomingTask.getTask())) {
+        if (getList().contains(task)) {
             getList().remove(task);
             TodoServer.getLog().add(new ArrayList<>(getList()));
         }
@@ -67,9 +68,5 @@ public class Todos {
 
     public List<String> getList() {
         return list;
-    }
-
-    public void setMaxSizeList(int maxSizeList) {
-        this.maxSizeList = maxSizeList;
     }
 }
