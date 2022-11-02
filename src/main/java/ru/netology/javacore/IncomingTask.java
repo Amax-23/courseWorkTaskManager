@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 
 public class IncomingTask implements Serializable {
-    protected String type;
-    protected String task;
+    private String type;
+    private String task;
 
     public String getType() {
         return type;
@@ -15,4 +15,11 @@ public class IncomingTask implements Serializable {
         return task;
     }
 
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setTask(String task) {
+        this.task = task;
+    }
 }

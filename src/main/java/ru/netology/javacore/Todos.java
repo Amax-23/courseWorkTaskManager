@@ -2,34 +2,28 @@ package ru.netology.javacore;
 
 import com.google.gson.Gson;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
 
 public class Todos {
-    protected List<String> list;
-    protected int maxSizeList = 7;
+    private List<String> list;
+    private int maxSizeList;
     protected IncomingTask incomingTask;
 
     public Todos() {
         this.list = new ArrayList<>();
         this.incomingTask = new IncomingTask();
+        this.maxSizeList = 7;
     }
 
-    public void readIncomingMsg(String jsonFile) {
-        try {
-            incomingTask = new Gson().fromJson(new FileReader(jsonFile), IncomingTask.class);
-            if (incomingTask.getType().equals("ADD")) {
-                addTask(incomingTask.getTask());
-            } else if (incomingTask.getType().equals("REMOVE")) {
-                removeTask(incomingTask.getTask());
-            } else if (incomingTask.getType().equals("RESTORE")) {
-                restoreTask();
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+    public void readIncomingMsg(String task) {
+        incomingTask = new Gson().fromJson(task, IncomingTask.class);
+        if (incomingTask.getType().equals("ADD")) {
+            addTask(incomingTask.getTask());
+        } else if (incomingTask.getType().equals("REMOVE")) {
+            removeTask(incomingTask.getTask());
+        } else if (incomingTask.getType().equals("RESTORE")) {
+            restoreTask();
         }
     }
 
@@ -37,12 +31,14 @@ public class Todos {
         if (!TodoServer.getLog().isEmpty()) {
             TodoServer.getLog().remove(TodoServer.getLog().getLast());
             list = TodoServer.getLog().getLast();
+        } else {
+            throw new NoSuchElementException("Нечего восстанавливать!");
         }
     }
 
     public void addTask(String task) {
         if (getList().isEmpty() || getList().size() < maxSizeList) {
-            if (!getList().contains(incomingTask.getTask())) {
+            if (!getList().contains(task)) {
                 getList().add(task);
                 TodoServer.getLog().add(new ArrayList<>(getList()));
             }
@@ -68,5 +64,13 @@ public class Todos {
 
     public List<String> getList() {
         return list;
+    }
+
+    public void setMaxSizeList(int maxSizeList) {
+        this.maxSizeList = maxSizeList;
+    }
+
+    public int getMaxSizeList() {
+        return maxSizeList;
     }
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 @DisplayName("Тестирование: Todos")
 public class TodosTests {
     Todos todos = new Todos();
+    TodoServer server = new TodoServer(8989, todos);
 
     @BeforeAll
     static void setUpApp() {
@@ -39,7 +40,6 @@ public class TodosTests {
         Assertions.assertEquals(2, todos.getList().size());
         Assertions.assertTrue(todos.getList().contains("Вторая"));
         Assertions.assertTrue(todos.getList().contains("Первая"));
-
     }
 
     @Test
@@ -53,7 +53,7 @@ public class TodosTests {
         todos.addTask("Шестая");
         todos.addTask("Седьмая");
         todos.addTask("Восьмая");
-        Assertions.assertEquals(todos.maxSizeList, todos.getList().size());
+        Assertions.assertEquals(todos.getMaxSizeList(), todos.getList().size());
         Assertions.assertTrue(todos.getList().contains("Седьмая"));
         Assertions.assertFalse(todos.getList().contains("Восьмая"));
     }
@@ -75,5 +75,4 @@ public class TodosTests {
         Assertions.assertEquals(3, todos.getList().size());
         Assertions.assertFalse(todos.getList().contains("Первая"));
     }
-
 }
