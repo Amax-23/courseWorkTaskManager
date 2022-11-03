@@ -3,6 +3,7 @@ package ru.netology.javacore;
 import com.google.gson.Gson;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public class Todos {
@@ -55,11 +56,14 @@ public class Todos {
     public String getAllTasks() {
         List<String> listOut = new ArrayList<>(getList());
         Collections.sort(listOut);
-        return listOut.toString()
-                .replace(",", "")
-                .replace("[", "")
-                .replace("]", "")
-                .trim();
+        return listOut.stream().collect(Collectors.joining(" ")); // по совету ФИЛИППА
+        //return String.join(" ", listOut); // по совету IDEA
+        // можно как ниже, но это было бы не хорошо
+//        return listOut.toString()
+//                .replace(",", "")
+//                .replace("[", "")
+//                .replace("]", "")
+//                .trim();
     }
 
     public List<String> getList() {
